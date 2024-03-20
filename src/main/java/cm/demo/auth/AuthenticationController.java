@@ -28,9 +28,17 @@ public class AuthenticationController {
   }
 
   @PostMapping("/authenticate")
-  public ResponseEntity<AuthenticationResponse> authenticate(
+  public ResponseEntity<?> authenticate(
           @RequestBody AuthenticationRequest request
   ) {
-    return ResponseEntity.ok(service.authenticate(request));
+    try {
+      AuthenticationResponse response = service.authenticate(request);
+      return ResponseEntity.ok(response);
+    } catch (IllegalArgumentException e) {
+      System.out.println("AUTHENTICATION ERROR: " + e.getMessage());
+      return ResponseEntity.badRequest().body(e.getMessage());
+//      return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Authentication failed: " + e.getMessage());
+    }
+//    return ResponseEntity.ok(service.authenticate(request));
   }
 }

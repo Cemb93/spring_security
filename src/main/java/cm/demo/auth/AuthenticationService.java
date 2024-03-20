@@ -50,14 +50,6 @@ public class AuthenticationService {
     repository.save(user);
 
     var jwtToken = jwtService.generateToken(user);
-//    System.out.println("USER REGISTER: " + AuthenticationResponse.builder()
-//                    .firstname(user.getFirstname())
-//                    .lastname(user.getLastname())
-//                    .email(user.getEmail())
-//                    .token(jwtToken)
-//                    .roles(user.getRoles())
-//                    .build()
-//            );
     return AuthenticationResponse.builder()
             .firstname(user.getFirstname())
             .lastname(user.getLastname())

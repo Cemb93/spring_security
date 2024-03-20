@@ -1,5 +1,6 @@
 package cm.demo.config;
 
+import cm.demo.models.EnumRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,12 @@ public class SecurityConfiguration {
 //  @Autowired
   private final AuthenticationProvider authenticationProvider;
 
+  private static final String[] WHITE_LIST_URL = {
+          "/api/v1/auth/**",
+          "/medicos",
+          "/medicos/**",
+  };
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     /*
@@ -39,9 +46,12 @@ public class SecurityConfiguration {
 //            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 //            .and().authenticationProvider(authenticationProvider)
 //            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+    System.out.println("ROLE - ADMIN: " + EnumRole.ADMIN.toString() );
+    System.out.println("ROLE - ADMIN - 2: " + EnumRole.ADMIN );
 
     http.csrf(config -> config.disable()).authorizeHttpRequests(auth -> {
-      auth.requestMatchers("/api/v1/auth/**").permitAll();
+      auth.requestMatchers(WHITE_LIST_URL).permitAll()
+              .requestMatchers("/api/v1/auth/authenticate").hasAnyRole(EnumRole.ADMIN.toString());
       auth.anyRequest().authenticated();
     }).sessionManagement(session -> {
               session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
